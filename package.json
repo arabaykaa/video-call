@@ -1,0 +1,52 @@
+{
+  "name": "@arabaykaa/react-webrtc-call",
+  "version": "0.1.0",
+  "description": "React hooks for P2P video calls over WebRTC",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arabaykaa/video-call.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arabaykaa/video-call/issues"
+  },
+  "homepage": "https://github.com/arabaykaa/video-call#readme",
+  "keywords": [
+    "webrtc",
+    "react",
+    "video",
+    "hooks",
+    "p2p"
+  ],
+  "author": "arabaykaa",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  }
+}
