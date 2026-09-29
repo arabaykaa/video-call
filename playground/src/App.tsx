@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { useLocalMedia } from "@arabaykaa/react-webrtc-call";
 
 export default function App() {
-  const { stream, error } = useLocalMedia({ video: false, audio: true });
+  const { stream, error } = useLocalMedia();
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -10,11 +10,5 @@ export default function App() {
   }, [stream]);
 
   if (error) return <p>Ошибка: {error.message}</p>;
-  return (
-    <p>
-      {stream
-        ? `Микрофон подключён: ${stream.getAudioTracks()[0]?.label}`
-        : "Запрашиваю доступ..."}
-    </p>
-  );
+  return <video ref={ref} autoPlay playsInline muted style={{ width: 480 }} />;
 }
