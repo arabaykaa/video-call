@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { SignalingClient } from "../core/signaling-client";
+import { SignalingClient, type PeerInfo } from "../core/signaling-client";
 import { PeerConnection } from "../core/peer-connection";
 
 export type CallStatus = "idle" | "connecting" | "connected" | "error";
 
 export interface RemoteParticipant {
   peerId: string;
+  name: string;
   stream: MediaStream | null;
   connectionState: RTCPeerConnectionState;
 }
@@ -14,6 +15,7 @@ export interface UseVideoCallOptions {
   signalingUrl: string;
   roomId: string;
   localStream: MediaStream | null;
+  name?: string;
   iceServers?: RTCIceServer[];
   enabled?: boolean;
 }
@@ -22,6 +24,7 @@ export function useVideoCall({
   signalingUrl,
   roomId,
   localStream,
+  name = "Guest",
   iceServers,
   enabled = true,
 }: UseVideoCallOptions) {
@@ -31,6 +34,12 @@ export function useVideoCall({
 
   // iceServers храним в ref, чтобы новый массив на каждом рендере не перезапускал звонок
   const iceServersRef = useRef(iceServers);
+  const nameRef = useRef(name);
+
+  useEffect(() => {
+    nameRef.current = name;
+  });
+
   useEffect(() => {
     iceServersRef.current = iceServers;
   });
@@ -52,7 +61,10 @@ export function useVideoCall({
       );
     };
 
-    const createPeer = (peerId: string, polite: boolean) => {
+    const createPeer = (
+      { peerId, name: peerName }: PeerInfo,
+      polite: boolean,
+    ) => {
       const peer = new PeerConnection({
         remotePeerId: peerId,
         polite,
@@ -67,7 +79,7 @@ export function useVideoCall({
       peers.set(peerId, peer);
       setParticipants((prev) => [
         ...prev.filter((p) => p.peerId !== peerId),
-        { peerId, stream: null, connectionState: "new" },
+        { peerId, name: peerName, stream: null, connectionState: "new" },
       ]);
       peer.addLocalStream(stream);
     };
@@ -81,11 +93,11 @@ export function useVideoCall({
     // Мы вошли: со всеми, кто уже в комнате, соединяемся как «вежливые»
     signaling.on("joined", (_myId, existingPeers) => {
       setStatus("connected");
-      existingPeers.forEach((peerId) => createPeer(peerId, true));
+      existingPeers.forEach((peer) => createPeer(peer, true));
     });
 
     // Кто-то вошёл после нас: с ним мы «невежливые»
-    signaling.on("peerJoined", (peerId) => createPeer(peerId, false));
+    signaling.on("peerJoined", (peer) => createPeer(peer, false));
 
     signaling.on("peerLeft", removePeer);
 
@@ -105,7 +117,7 @@ export function useVideoCall({
     signaling
       .connect()
       .then(() => {
-        if (!cancelled) signaling.join(roomId);
+        if (!cancelled) signaling.join(roomId, nameRef.current);
       })
       .catch((err: Error) => {
         if (cancelled) return;

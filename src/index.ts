@@ -8,7 +8,11 @@ export type {
 } from "./react/use-video-call";
 
 export { SignalingClient } from "./core/signaling-client";
-export type { SignalData, SignalingEvents } from "./core/signaling-client";
+export type {
+  SignalData,
+  SignalingEvents,
+  PeerInfo,
+} from "./core/signaling-client";
 
 export { PeerConnection } from "./core/peer-connection";
 export type { PeerConnectionOptions } from "./core/peer-connection";

@@ -3,22 +3,27 @@ export type SignalData =
   | { type: "description"; description: RTCSessionDescriptionInit } // offer or answer
   | { type: "candidate"; candidate: RTCIceCandidateInit }; // ICE-candidate
 
+export interface PeerInfo {
+  peerId: string;
+  name: string;
+}
+
 // Type of message that client will send to a client
 type ClientMessage =
-  | { type: "join"; roomId: string }
+  | { type: "join"; roomId: string; name: string }
   | { type: "signal"; to: string; data: SignalData };
 
 // Type of message that server will send to a client
 type ServerMessage =
-  | { type: "joined"; peerId: string; peers: string[] }
-  | { type: "peer-joined"; peerId: string }
+  | { type: "joined"; peerId: string; peers: PeerInfo[] }
+  | { type: "peer-joined"; peerId: string; name: string }
   | { type: "peer-left"; peerId: string }
   | { type: "signal"; from: string; data: SignalData };
 
 // Type of availabel events to subscribe outro
 export interface SignalingEvents {
-  joined: (peerId: string, peers: string[]) => void;
-  peerJoined: (peerId: string) => void;
+  joined: (peerId: string, peers: PeerInfo[]) => void;
+  peerJoined: (peer: PeerInfo) => void;
   peerLeft: (peerId: string) => void;
   signal: (from: string, data: SignalData) => void;
   close: () => void;
@@ -45,8 +50,8 @@ export class SignalingClient {
     });
   }
 
-  join(roomId: string) {
-    this.send({ type: "join", roomId });
+  join(roomId: string, name: string) {
+    this.send({ type: "join", roomId, name });
   }
 
   sendSignal(to: string, data: SignalData) {
@@ -96,7 +101,7 @@ export class SignalingClient {
         this.emit("joined", message.peerId, message.peers);
         break;
       case "peer-joined":
-        this.emit("peerJoined", message.peerId);
+        this.emit("peerJoined", { peerId: message.peerId, name: message.name });
         break;
       case "peer-left":
         this.emit("peerLeft", message.peerId);
