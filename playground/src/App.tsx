@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocalMedia, useVideoCall } from "@arabaykaa/react-webrtc-call";
+import { useLocalMedia, useVideoCall } from "react-webrtc-call";
 import "./App.css";
 
 const SIGNALING_URL = "ws://localhost:8080";

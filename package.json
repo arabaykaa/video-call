@@ -1,5 +1,5 @@
 {
-  "name": "@arabaykaa/react-webrtc-call",
+  "name": "react-webrtc-call",
   "version": "0.1.0",
   "description": "React hooks for P2P video calls over WebRTC",
   "type": "module",

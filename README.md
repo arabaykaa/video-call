@@ -1,4 +1,4 @@
-# @arabaykaa/react-webrtc-call
+# react-webrtc-call
 
 React-хуки для P2P видеозвонков на WebRTC. Без SFU/TURN-инфраструктуры "из коробки" — пакет даёт вам сигналинг-клиент и готовые React-хуки, а медиапотоки идут напрямую между браузерами.
 
@@ -24,7 +24,7 @@ React-хуки для P2P видеозвонков на WebRTC. Без SFU/TURN-
 ## Установка
 
 ```bash
-npm install @arabaykaa/react-webrtc-call
+npm install react-webrtc-call
 ```
 
 Пакет требует `react >= 18` как peer dependency.
@@ -32,7 +32,7 @@ npm install @arabaykaa/react-webrtc-call
 ## Быстрый старт
 
 ```tsx
-import { useLocalMedia, useVideoCall } from "@arabaykaa/react-webrtc-call";
+import { useLocalMedia, useVideoCall } from "react-webrtc-call";
 
 function Call() {
   const { stream, error: mediaError } = useLocalMedia({ video: true, audio: true });
@@ -146,7 +146,7 @@ const { status, error, participants } = useVideoCall(options: UseVideoCallOption
 Низкоуровневый клиент сигналинга поверх WebSocket. Используется внутри `useVideoCall`, но экспортируется отдельно для кастомных сценариев.
 
 ```ts
-import { SignalingClient } from "@arabaykaa/react-webrtc-call";
+import { SignalingClient } from "react-webrtc-call";
 
 const signaling = new SignalingClient("ws://localhost:8080");
 
@@ -168,7 +168,7 @@ signaling.disconnect();
 Обёртка над `RTCPeerConnection`, реализующая "вежливый/невежливый" (polite/impolite) перекат при одновременном обмене offer'ами (perfect negotiation pattern). Тоже используется внутри `useVideoCall`.
 
 ```ts
-import { PeerConnection } from "@arabaykaa/react-webrtc-call";
+import { PeerConnection } from "react-webrtc-call";
 
 const peer = new PeerConnection({
   remotePeerId: "peer-id",
